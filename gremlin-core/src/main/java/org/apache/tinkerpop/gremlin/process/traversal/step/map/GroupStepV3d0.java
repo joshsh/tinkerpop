@@ -111,6 +111,16 @@ public final class GroupStepV3d0<S, K, V, R> extends ReducingBarrierStep<S, Map<
     }
 
     @Override
+    public void replaceLocalChild(final Traversal.Admin<?, ?> oldTraversal, final Traversal.Admin<?, ?> newTraversal) {
+        if (null != this.keyTraversal && this.keyTraversal.equals(oldTraversal))
+            this.keyTraversal = this.integrateChild(newTraversal);
+        else if (null != this.valueTraversal && this.valueTraversal.equals(oldTraversal))
+            this.valueTraversal = this.integrateChild(newTraversal);
+        else if (null != this.reduceTraversal && this.reduceTraversal.equals(oldTraversal))
+            this.reduceTraversal = this.integrateChild(newTraversal);
+    }
+
+    @Override
     public Set<TraverserRequirement> getRequirements() {
         return this.getSelfAndChildRequirements(TraverserRequirement.SIDE_EFFECTS, TraverserRequirement.BULK);
     }
