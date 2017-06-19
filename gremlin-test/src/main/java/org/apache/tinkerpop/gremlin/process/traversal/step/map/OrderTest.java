@@ -29,6 +29,7 @@ import org.apache.tinkerpop.gremlin.process.traversal.TraversalEngine;
 import org.apache.tinkerpop.gremlin.process.traversal.dsl.graph.__;
 import org.apache.tinkerpop.gremlin.process.traversal.util.TraversalHelper;
 import org.apache.tinkerpop.gremlin.structure.Column;
+import org.apache.tinkerpop.gremlin.structure.Property;
 import org.apache.tinkerpop.gremlin.structure.T;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.junit.Test;
@@ -95,6 +96,10 @@ public abstract class OrderTest extends AbstractGremlinProcessTest {
     public abstract Traversal<Vertex, String> get_g_V_both_hasLabelXpersonX_order_byXage_decrX_name();
 
     public abstract Traversal<Vertex, String> get_g_V_hasLabelXsongX_order_byXperfomances_decrX_byXnameX_rangeX110_120X_name();
+
+    public abstract Traversal<Vertex, Vertex> get_g_V_order_byXlabelX();
+
+    public abstract Traversal<Vertex, Vertex> get_g_V_order_byXlabel_decrX();
 
     @Test
     @LoadGraphWith(MODERN)
@@ -374,6 +379,42 @@ public abstract class OrderTest extends AbstractGremlinProcessTest {
                 "KNOCKING ON HEAVENS DOOR", "MEMPHIS BLUES"), traversal);
     }
 
+    @Test
+    @LoadGraphWith(MODERN)
+    public void g_V_order_byXlabelX() {
+        final Traversal<Vertex, Vertex> traversal = get_g_V_order_byXlabelX();
+        printTraversalForm(traversal);
+        for (int i = 0; i < 4; i++) {
+            assertTrue(traversal.hasNext());
+            final Vertex v = traversal.next();
+            assertEquals("person", v.label());
+        }
+        for (int i = 0; i < 2; i++) {
+            assertTrue(traversal.hasNext());
+            final Vertex v = traversal.next();
+            assertEquals("software", v.label());
+        }
+        assertFalse(traversal.hasNext());
+    }
+
+    @Test
+    @LoadGraphWith(MODERN)
+    public void g_V_order_byXlabel_decrX() {
+        final Traversal<Vertex, Vertex> traversal = get_g_V_order_byXlabel_decrX();
+        printTraversalForm(traversal);
+        for (int i = 0; i < 2; i++) {
+            assertTrue(traversal.hasNext());
+            final Vertex v = traversal.next();
+            assertEquals("software", v.label());
+        }
+        for (int i = 0; i < 4; i++) {
+            assertTrue(traversal.hasNext());
+            final Vertex v = traversal.next();
+            assertEquals("person", v.label());
+        }
+        assertFalse(traversal.hasNext());
+    }
+
     public static class Traversals extends OrderTest {
 
         @Override
@@ -483,6 +524,16 @@ public abstract class OrderTest extends AbstractGremlinProcessTest {
         @Override
         public Traversal<Vertex, String> get_g_V_hasLabelXsongX_order_byXperfomances_decrX_byXnameX_rangeX110_120X_name() {
             return g.V().hasLabel("song").order().by("performances", Order.decr).by("name").range(110, 120).values("name");
+        }
+
+        @Override
+        public Traversal<Vertex, Vertex> get_g_V_order_byXlabelX() {
+            return g.V().order().by(__.label());
+        }
+
+        @Override
+        public Traversal<Vertex, Vertex> get_g_V_order_byXlabel_decrX() {
+            return g.V().order().by(__.label(), Order.decr);
         }
     }
 }
