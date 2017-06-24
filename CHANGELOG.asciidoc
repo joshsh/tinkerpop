@@ -26,6 +26,8 @@ image::https://raw.githubusercontent.com/apache/tinkerpop/master/docs/static/ima
 TinkerPop 3.3.0 (Release Date: NOT OFFICIALLY RELEASED YET)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+* `GryoVersion` now includes a default `ClassResolver` to supply to the `GryoMapper`.
+* `GryoClassResolver` renamed to `GryoClassResolverV1d0` which has an abstract class that for providers to extend in `AbstractGryoClassResolver`.
 * Graphite and Ganglia are no longer packaged with the Gremlin Server distribution.
 * Renamed `RangeByIsCountStrategy` to `CountStrategy`.
 * Added more specific typing to various `__` traversal steps. E.g. `<A,Vertex>out()` is `<Vertex,Vertex>out()`.
